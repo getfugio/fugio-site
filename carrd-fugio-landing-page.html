@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fugio — Mind Your Pipeline</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500;600&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dark: #8B6914;
+    --copper: #B87333;
+    --ink: #0A0A0A;
+    --ink-soft: #111111;
+    --ink-raised: #161616;
+    --parchment: #F0E8D5;
+    --text-muted: #6B5A3A;
+  }
+  body {
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+  nav { padding: 2rem 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .wordmark { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; letter-spacing: 0.08em; color: var(--gold); }
+  .tagline-nav { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+  .rule { border: none; border-top: 0.5px solid rgba(201,168,76,0.2); margin: 0; }
+  .hero { padding: 5rem 0 4rem; }
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+    display: block;
+    font-weight: 500;
+  }
+  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 500; line-height: 1.15; color: var(--parchment); margin-bottom: 1.75rem; letter-spacing: -0.01em; }
+  .hero h1 em { font-style: italic; color: var(--gold-light); }
+  .hero-sub { font-size: 17px; font-weight: 300; color: rgba(240,232,213,0.65); max-width: 580px; line-height: 1.8; margin-bottom: 2.5rem; }
+  .cta-group { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .btn-primary { display: inline-block; background: var(--gold); color: var(--ink); font-family: 'Raleway', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 28px; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn-primary:hover { background: var(--gold-light); }
+  .cta-note { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+  section { padding: 4rem 0; border-top: 0.5px solid rgba(201,168,76,0.12); }
+  h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 500; color: var(--parchment); margin-bottom: 1.25rem; line-height: 1.25; }
+  h2 em { font-style: italic; color: var(--gold-light); }
+  p { color: rgba(240,232,213,0.65); margin-bottom: 1rem; font-weight: 300; }
+  .problem-list { list-style: none; margin-top: 2rem; display: flex; flex-direction: column; }
+  .problem-list li { display: flex; gap: 1rem; align-items: flex-start; font-size: 15px; color: rgba(240,232,213,0.6); font-weight: 300; padding: 1rem 0; border-bottom: 0.5px solid rgba(201,168,76,0.08); }
+  .problem-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .problem-marker { color: var(--copper); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.4; flex-shrink: 0; width: 16px; }
+  .deliverable-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(201,168,76,0.12); margin-top: 2rem; border: 0.5px solid rgba(201,168,76,0.12); }
+  .deliverable-item { background: var(--ink-soft); padding: 1.5rem; }
+  .deliverable-item h3 { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 500; color: var(--gold-light); margin-bottom: 0.5rem; line-height: 1.3; }
+  .deliverable-item p { font-size: 13px; line-height: 1.65; margin: 0; color: rgba(240,232,213,0.45); }
+  .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(201,168,76,0.12); margin-top: 2rem; border: 0.5px solid rgba(201,168,76,0.12); }
+  .signal-item { background: var(--ink-soft); padding: 1.25rem 1.5rem; }
+  .signal-item.highlight { background: var(--ink-raised); }
+  .signal-category { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 0.6rem; display: block; }
+  .signal-item h3 { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 500; color: var(--gold-light); margin-bottom: 0.4rem; line-height: 1.3; }
+  .signal-item p { font-size: 12px; line-height: 1.6; margin: 0; color: rgba(240,232,213,0.45); }
+  .signal-item.highlight p { color: rgba(240,232,213,0.55); }
+  .steps { margin-top: 2rem; display: flex; flex-direction: column; }
+  .step { display: flex; gap: 1.5rem; align-items: flex-start; padding: 1.25rem 0; border-bottom: 0.5px solid rgba(201,168,76,0.08); }
+  .step:last-child { border-bottom: none; }
+  .step-num { font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold-dark); letter-spacing: 0.1em; flex-shrink: 0; padding-top: 2px; width: 24px; }
+  .step-body h3 { font-family: 'Raleway', sans-serif; font-size: 14px; font-weight: 600; color: var(--parchment); margin-bottom: 0.25rem; letter-spacing: 0.02em; }
+  .step-body p { font-size: 13px; color: rgba(240,232,213,0.45); margin: 0; font-weight: 300; }
+  .pricing-card { border: 0.5px solid rgba(201,168,76,0.3); padding: 2.5rem; margin-top: 2rem; background: var(--ink-soft); }
+  .price-amount { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 500; color: var(--gold); line-height: 1; margin-bottom: 0.25rem; }
+  .price-period { font-size: 13px; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 400; }
+  .price-features { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .price-features li { font-size: 14px; color: rgba(240,232,213,0.6); font-weight: 300; display: flex; gap: 0.75rem; align-items: flex-start; }
+  .price-features li::before { content: '/'; color: var(--gold-dark); flex-shrink: 0; }
+  .price-note { font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 1rem; margin-bottom: 0; }
+  .fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .fit-col h3 { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 1rem; }
+  .fit-col.yes h3 { color: var(--gold); }
+  .fit-col.no h3 { color: var(--copper); }
+  .fit-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .fit-col ul li { font-size: 13px; color: rgba(240,232,213,0.5); font-weight: 300; line-height: 1.5; }
+  .closing-section { text-align: center; padding: 5rem 0 3rem; border-top: 0.5px solid rgba(201,168,76,0.12); }
+  .fugio-latin { font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold-dark); display: block; margin-bottom: 1.5rem; font-style: italic; }
+  .closing-section h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 1rem; }
+  footer { padding: 3rem 0; border-top: 0.5px solid rgba(201,168,76,0.12); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand .wordmark { display: block; margin-bottom: 0.25rem; }
+  .footer-brand p { font-size: 12px; color: var(--text-muted); margin: 0; font-weight: 400; }
+  .footer-contact a { font-size: 13px; color: var(--gold-dark); text-decoration: none; font-weight: 400; letter-spacing: 0.03em; }
+  @media (max-width: 540px) {
+    .deliverable-grid, .signal-grid, .fit-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <nav>
+    <span class="wordmark">fugio</span>
+    <span class="tagline-nav">mind your pipeline</span>
+  </nav>
+  <hr class="rule">
+
+  <div class="hero">
+    <span class="section-label">Prospect Intelligence</span>
+    <h1>Your team is spending too much time <em>finding</em> prospects instead of <em>closing</em> them.</h1>
+    <p class="hero-sub">Fugio delivers a verified, signal-scored list of prospects every week with a specific reason to reach out to each one. Your reps get the right people, the right contact info, and the right context to start a real conversation without spending hours on research they should not be doing in the first place.</p>
+    <div class="cta-group">
+      <a href="https://calendly.com/danny-getfugio/30min" target="_blank" class="btn-primary">Book a 30-minute call</a>
+      <span class="cta-note">No pitch. Just a conversation about your outbound strategy.</span>
+    </div>
+  </div>
+
+  <section>
+    <span class="section-label">Sound familiar?</span>
+    <h2>Your team has the tools. The problem is <em>what they are doing with their time.</em></h2>
+    <p>You hired reps to have conversations and close deals. Here is what is actually eating their week.</p>
+    <ul class="problem-list">
+      <li><span class="problem-marker">/</span><span>Building lists from scratch, every week, inconsistently. One rep goes deep on firmographics. Another just exports whatever the database gives them. The result is wildly different list quality from rep to rep, and nobody really knows whose approach is working.</span></li>
+      <li><span class="problem-marker">/</span><span>Bad contact data that wastes everyone's time. Emails bounce. Phone numbers are wrong. The person left six months ago. Reps are burning sequences on contacts that were never going to respond.</span></li>
+      <li><span class="problem-marker">/</span><span>No visibility into which accounts are actually ready to buy right now. Without tracking signals like funding, hiring, leadership changes, and competitor activity, your team is prospecting on gut feel instead of evidence.</span></li>
+      <li><span class="problem-marker">/</span><span>Generic outreach that gets ignored. Volume alone stopped working. What breaks through is a coordinated, multi-touch approach across email, phone, and LinkedIn paired with a reason to reach out that is specific to that company at that moment. Most reps do not have the time or the data to pull that off consistently.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <span class="section-label">What changes</span>
+    <h2>Every week, your team gets a list that is <em>ready to work.</em></h2>
+    <p>No research. No data cleanup. No debate about who to call. Just open it and go.</p>
+    <div class="deliverable-grid">
+      <div class="deliverable-item">
+        <h3>Verified email, phone, and LinkedIn</h3>
+        <p>Every contact comes with multi-source verified data across all three channels. Your reps can run a coordinated sequence from day one without hunting for a phone number or bouncing off a dead inbox.</p>
+      </div>
+      <div class="deliverable-item">
+        <h3>A "Why Now" for every account</h3>
+        <p>One plain-English sentence explaining why this company belongs on the list this week. Not a generic pitch reason but a specific signal we found: a funding round, a new hire, a competitor mention, a strategic move.</p>
+      </div>
+      <div class="deliverable-item">
+        <h3>Priority order based on buying intent</h3>
+        <p>Every account is scored across multiple signals. Your reps start at the top and work down. The accounts most likely to be in market right now are always at the front of the list.</p>
+      </div>
+      <div class="deliverable-item">
+        <h3>Delivered every week, automatically</h3>
+        <p>Scores update as your market moves. New signals surface new accounts. Contacts you have already received are never repeated. It is a living list, not a one-time export.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="section-label">How we score accounts</span>
+    <h2>We track the signals that indicate a company is <em>ready to buy right now.</em></h2>
+    <p>Each signal is weighted and combined into a single priority score. Your reps do not need to know how it works. They just need to know who to call first.</p>
+    <div class="signal-grid">
+      <div class="signal-item">
+        <span class="signal-category">Growth signals</span>
+        <h3>Hiring patterns</h3>
+        <p>Active job postings for roles relevant to your buyer. Companies hiring for the titles that matter to your solution are companies in motion and ready to invest.</p>
+      </div>
+      <div class="signal-item">
+        <span class="signal-category">Growth signals</span>
+        <h3>Recent funding</h3>
+        <p>Closed a round in the last 90 days. Fresh capital means new budget, new pressure to hit numbers, and a leadership team ready to invest in the right things.</p>
+      </div>
+      <div class="signal-item">
+        <span class="signal-category">Growth signals</span>
+        <h3>Headcount growth</h3>
+        <p>Team size expanding faster than their peers. Growing companies often outpace their existing systems and need new solutions to keep up.</p>
+      </div>
+      <div class="signal-item">
+        <span class="signal-category">Technology signals</span>
+        <h3>Tech stack changes</h3>
+        <p>Tools added or dropped in the last 30 days. A company that just switched platforms or added new software is in motion and open to change.</p>
+      </div>
+      <div class="signal-item">
+        <span class="signal-category">Competitive signals</span>
+        <h3>Competitor mentions</h3>
+        <p>Actively referencing your competitors on their website or in job postings. These accounts already know the category. They are evaluating options right now.</p>
+      </div>
+      <div class="signal-item">
+        <span class="signal-category">Contact signals</span>
+        <h3>Leadership changes</h3>
+        <p>A new decision-maker in the last 90 days. New leaders evaluate vendors, reset priorities, and make decisions fast. One of the highest-intent windows in B2B.</p>
+      </div>
+      <div class="signal-item">
+        <span class="signal-category">Contact signals</span>
+        <h3>LinkedIn activity</h3>
+        <p>Key contacts posting about challenges, priorities, or initiatives relevant to what you sell. A warm signal that the conversation is already on their mind.</p>
+      </div>
+      <div class="signal-item">
+        <span class="signal-category">Intent signals</span>
+        <h3>Job posting intelligence</h3>
+        <p>Tools required, methodologies referenced, and pain points buried inside active job descriptions. A window into exactly what a company needs right now, in their own words.</p>
+      </div>
+      <div class="signal-item highlight" style="grid-column: 1 / -1;">
+        <span class="signal-category">Human connection signals</span>
+        <h3>Personal common ground</h3>
+        <p>Shared alma mater, mutual connections, and interests surfaced from LinkedIn and public profiles — hobbies, causes, communities, previous employers. The best outreach does not just reference what a company is doing. It acknowledges who the person is. We surface publicly available personal context so your reps can open a conversation that feels like it was written for that individual, not pasted from a template.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="section-label">How it works</span>
+    <h2>You fill out one form. <em>We handle everything else.</em></h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-body">
+          <h3>15-minute intake form</h3>
+          <p>Tell us who your best customers look like, what industries you target, and who to exclude. If you already have a TAM or account list, we can work from that too.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-body">
+          <h3>We build your target market and scoring model</h3>
+          <p>We configure your ICP, set up the signal stack around your buyer, and suppress your existing customers and active pipeline before anything gets built.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <div class="step-body">
+          <h3>Your first list lands within the week</h3>
+          <p>Verified contacts, intent scores, and a Why Now for every account. We walk through it together on a call to calibrate before we build the next one.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <div class="step-body">
+          <h3>Every week after that, it runs automatically</h3>
+          <p>Your reps get a fresh, prioritized list. They know who to contact, why to contact them, and where to reach them across email, phone, and LinkedIn. The research is already done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="section-label">Pricing</span>
+    <h2>A 60-day pilot. <em>See what your team can do with a real list.</em></h2>
+    <div class="pricing-card">
+      <div class="price-amount">$2,500</div>
+      <div class="price-period">60-day pilot / 2 deliveries / $3,000 per month after</div>
+      <ul class="price-features">
+        <li>Weekly prospect list, verified and scored</li>
+        <li>Verified email, phone, and LinkedIn for every contact</li>
+        <li>Why Now reason for every account</li>
+        <li>Custom ICP configuration and signal stack</li>
+        <li>Existing customers and pipeline suppressed from day one</li>
+        <li>List review call after first delivery to dial it in</li>
+      </ul>
+      <a href="https://calendly.com/danny-getfugio/30min" target="_blank" class="btn-primary">Book a call to get started</a>
+      <p class="price-note">At $3,000 per month, you are replacing hours of weekly research with a system that runs overnight. For most teams, one meeting booked from the first list covers the cost of the pilot.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="section-label">Who it's for</span>
+    <h2>Built for teams where <em>outbound is how you grow.</em></h2>
+    <p>Solo AEs, small sales teams, founders carrying a number. If your growth depends on real conversations with real prospects, Fugio is built for you.</p>
+    <div class="fit-grid">
+      <div class="fit-col yes">
+        <h3>Good fit</h3>
+        <ul>
+          <li>AEs, SDRs, or BDRs doing active outbound</li>
+          <li>Founders or sales leaders who own the pipeline number</li>
+          <li>Teams without a dedicated RevOps or sales ops function</li>
+          <li>Reps who own their own prospecting</li>
+          <li>You know your ICP and are ready to work a list</li>
+        </ul>
+      </div>
+      <div class="fit-col no">
+        <h3>Not a fit</h3>
+        <ul>
+          <li>Fully inbound or product-led growth</li>
+          <li>No outbound motion at all</li>
+          <li>Enterprise teams with an existing RevOps function</li>
+          <li>No defined ICP yet</li>
+          <li>Not in a position to act on a list consistently</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="closing-section">
+    <span class="fugio-latin">fugio. time flies.</span>
+    <h2 style="margin-bottom: 1rem;">Your reps' time is too valuable<br>to spend on research. <em>Use it wisely.</em></h2>
+    <p style="margin-bottom: 0.5rem; font-size: 15px; max-width: 480px; margin-left: auto; margin-right: auto;">Every week without a system is a week your team is spending hours on work that should not be theirs. Book a call and we will show you what that time could look like instead.</p>
+    <p style="margin-bottom: 2rem; font-size: 13px; color: var(--text-muted);">If it is not a fit, we will say so. If it is, your first list can be in front of your team within the week.</p>
+    <a href="https://calendly.com/danny-getfugio/30min" target="_blank" class="btn-primary">Book a 30-minute call</a>
+  </div>
+
+  <footer>
+    <div class="footer-brand">
+      <span class="wordmark">fugio</span>
+      <p>mind your pipeline</p>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:danny@getfugio.com">danny@getfugio.com</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
